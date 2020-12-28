@@ -1,0 +1,21 @@
+package org.antlr;
+
+public class FieldSymbol extends VariableSymbol implements MemberSymbol{
+	protected int slot;
+	int fieldIndex;
+	public FieldSymbol(String name) {
+		super(name);
+		//this.fieldIndex = index;
+		//this.slot = index;
+	}
+
+	@Override
+	public int getSlotNumber() { return slot; }
+	
+	@Override
+	public String toString() {
+		String s = super.toString();
+		//return s +": "+ this.fieldIndex;
+		return s;
+	}
+}
