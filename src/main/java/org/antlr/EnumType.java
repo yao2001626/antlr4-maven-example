@@ -1,11 +1,16 @@
 package org.antlr;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class EnumType implements Type {
 	public String name;
 	public Set<String> values;
+	
+	protected Type enumType;
+	protected LinkedHashMap<String,Integer> table = new LinkedHashMap<String,Integer>();
+	protected int index = -1; // index we have just written
 	
 	public EnumType(){
 		name = "enum";
@@ -18,12 +23,14 @@ public class EnumType implements Type {
 	
 	@Override
 	public String getName() {
-		return "enum";
+		return toString();
 	}
 	@Override
 	public int getTypeIndex() {
-		// TODO Auto-generated method stub
-		return 0;
+		return -1;
 	}
-
+	@Override
+	public String toString(){
+		return "Enum: " + values.toString(); 
+	}
 }

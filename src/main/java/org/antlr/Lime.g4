@@ -100,7 +100,7 @@ fieldDecl
 initDecl returns [Scope scope]
 	: 'init' parameters block;
 methodDecl returns [Scope scope]
-	: 'method' ID  parameters (':' type)?  (NEWLINE INDENT 'when' guard 'do')? block (DEDENT)?; 
+	: ('private')? 'method' ID  parameters (':' type)?  (NEWLINE INDENT 'when' guard 'do')? block (DEDENT)?; 
 actionDecl returns [Scope scope]
 	: 'action' ID  (NEWLINE INDENT 'when' guard 'do')? block (DEDENT)? ;
 parameters
@@ -111,10 +111,10 @@ parsdef
 	: id_list ':' type ;
 type returns [Type typ]
 	: 'int' | 'bool' | 'void' | ID | arrayDecl | enumDecl;
-arrayDecl returns [ArrayType typ]
+arrayDecl returns [Type typ]
 	:'array' 'of' ty=('int' | 'bool' | ID);
 enumDecl returns [Type typ]
-	: '{' ID (',' ID)* '}';
+	: 'enum ''{' ID (',' ID)* '}';
 type_list
 	: type (',' type)* ;
 stmt
@@ -150,13 +150,13 @@ return_stmt
 block
 	: simple_stmt | NEWLINE INDENT stmt+ DEDENT ;
 guard 
-	: '(' guard ')'												#guardparen
-	| 'not' guard								   				#guardatomnot
+	: '(' guard ')'												                      #guardparen
+	| 'not' guard								   				                      #guardatomnot
 	| guard op=( '>=' | '<=' | '>' | '<' | '=' | '!=') guard   	#guardcompexpr
-	| guard 'and' guard                          				#guardandexpr
-	| guard 'or' guard                          				#guardorexpr
-	| ID 									   					#guardatomid
-	| INTEGER 								   					#guardatomint
+	| guard 'and' guard                          				        #guardandexpr
+	| guard 'or' guard                                          #guardorexpr
+	| ID 									   					                          #guardatomid
+	| INTEGER                                                   #guardatomint
 	;
 
 id_list
@@ -166,7 +166,7 @@ id_ele
 expr_list
 	: expr (',' expr)* ;
 expr
-	: '(' expr ')'							   #parenexpr
+	: '(' expr ')'							               #parenexpr
 	| '-' expr                                 #unaryMinusexpr
 	| 'not' expr                               #notexpr
 	| expr op=( '*' | '/' | '%' ) expr         #multexpr
@@ -175,19 +175,19 @@ expr
 	| expr op=( '=' | '!=' ) expr              #eqexpr
 	| expr 'and' expr                          #andexpr
 	| expr 'or' expr                           #orexpr
-	| atom									   #atomexpr
+	| atom									                   #atomexpr
 	;
 atom
 	:  INTEGER | True | False | Null | ID | method_call | arrayCreate | arrayElement ;	
 method_call
-	: 'new' n=ID args 						   #newcall
-	| c=ID '.' m=ID args 					   #methodcall
-	| arrayElement '.' m=ID args			   #arrayElementmethodcall
-	| 'print' args 			   		   		   #print
-	| 'getRand'  args						   #getRand
-	| 'setRand'  args						   #setRand
-	| 'getArg' args 		   		   		   #getArg
-	| ID args 								   #userDefined
+	: 'new' n=ID args 						            #newcall
+	| c=ID '.' m=ID args 					            #methodcall
+	| arrayElement '.' m=ID args			        #arrayElementmethodcall
+	| 'print' args 			   		   		          #print
+	| 'getRand'  args						              #getRand
+	| 'setRand'  args						              #setRand
+	| 'getArg' args 		   		   		          #getArg
+	| ID args 								                #userDefined
 	;
 arrayCreate
 	: 'new' ty=('int' | 'bool' | ID) selector;
@@ -197,18 +197,19 @@ selector
 	: '[' expr ']';
 args
 	: '(' expr_list? ')';
+
 //Lime Lexer
 Class 			: 'class';
 Method   		: 'method';
 Action			: 'action';
-Var				: 'var';
-Init			: 'init';
+Var				  : 'var';
+Init			  : 'init';
 New      		: 'new';
 When     		: 'when';
-Do  			: 'do';
+Do  			  : 'do';
 If       		: 'if';
 Else     		: 'else';
-Elif			: 'elif';
+Elif			  : 'elif';
 Then     		: 'then';
 While    		: 'while';
 Return   		: 'return';
@@ -217,31 +218,31 @@ Null    		: 'nil';
 Booltype		: 'bool';
 Inttype			: 'int';
 Voidtype		: 'void';
-True			: 'true';
-False			: 'false';
+True			  : 'true';
+False			  : 'false';
 
-Assign   : ':=';
-Or       : 'or';
-And      : 'and';
-Equals   : '==';
-NEquals  : '!=';
-GTEquals : '>=';
-LTEquals : '<=';
+Assign      : ':=';
+Or          : 'or';
+And         : 'and';
+Equals      : '==';
+NEquals     : '!=';
+GTEquals    : '>=';
+LTEquals    : '<=';
 
-GT       : '>';
-LT       : '<';
-Add      : '+';
-Subtract : '-';
-Multiply : '*';
-Divide   : '/';
-Modulus  : '%';
+GT          : '>';
+LT          : '<';
+Add         : '+';
+Subtract    : '-';
+Multiply    : '*';
+Divide      : '/';
+Modulus     : '%';
 
-OBrace   : '{' {opened++;};
-CBrace   : '}' {opened--;};
-OBracket : '[' {opened++;};
-CBracket : ']' {opened--;};
-OParen   : '(' {opened++;};
-CParen   : ')' {opened--;};
+OBrace      : '{' {opened++;};
+CBrace      : '}' {opened--;};
+OBracket    : '[' {opened++;};
+CBracket    : ']' {opened--;};
+OParen      : '(' {opened++;};
+CParen      : ')' {opened--;};
 
 fragment SPACES
  	: [ \t]+ ;

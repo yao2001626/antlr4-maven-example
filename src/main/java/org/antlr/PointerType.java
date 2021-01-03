@@ -18,5 +18,5 @@ public class PointerType implements Type{
 	@Override
 	public String toString() {
 		return "*"+ targetType;
-}
+	}
 }

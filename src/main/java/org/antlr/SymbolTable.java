@@ -19,9 +19,11 @@ public class SymbolTable {
 
 	public void initTypeSystem() {
 		PrimitiveType intType  = new PrimitiveType("int");
+		PREDEFINED.define(intType);
 		defineGlobalSymbol(intType);
 		PrimitiveType boolType = new PrimitiveType("bool");
 		defineGlobalSymbol(boolType);
+		PREDEFINED.define(boolType);
 		PrimitiveType voidType = new PrimitiveType("void");
 		defineGlobalSymbol(voidType);
 	}
